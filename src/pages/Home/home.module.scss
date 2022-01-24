@@ -1,0 +1,145 @@
+.container {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(245, 246, 252, 0.522),
+      rgb(0, 0, 0, 0.729)
+    ),
+    url("../../assets/images/nft.jpeg");
+  background-size: cover;
+  // border: 1px solid green;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1440px;
+}
+
+.container main > div:first-child {
+  box-shadow: 0 2px 15px -7px rgb(0 0 0 / 7%) !important;
+}
+.info-card span {
+  display: block;
+}
+
+.info-card :nth-child(1) {
+  color: var(--app-grey);
+  text-transform: uppercase;
+}
+
+.info-card :nth-child(2) {
+  color: #000;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.table-head span {
+  color: var(--app-grey);
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.container #recent-transactions {
+  border-radius: 5px;
+  box-shadow: 0 2px 15px -7px rgb(0 0 0 / 7%) !important;
+}
+
+#recent-transactions > * {
+  min-width: 700px;
+}
+
+@media screen and (min-width: 768px) {
+  #recent-transactions > * {
+    min-width: auto;
+  }
+}
+
+.contract-name span {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.contract-name span > span {
+  color: var(--app-secondary-green);
+}
+
+.title {
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+
+.refresh-btn {
+  background-color: #546e7a;
+}
+
+.refresh-btn:hover {
+  background-color: #546e7a;
+}
+
+.green-text {
+  color: var(--app-secondary-green);
+}
+
+.inner__con {
+  // border: 1px solid green;
+  height: calc(100vh - 74px);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  div {
+    width: 50%;
+    height: 100%;
+  }
+  .inner__con__right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 50px;
+    h1 {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 90px;
+      line-height: 0px;
+      color: #ffffff;
+      span {
+        background: -webkit-linear-gradient(45deg, #d6ff7f, #00b3cc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+    h2 {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 30px;
+      line-height: 40px;
+      color: #fff;
+      width: 399px;
+    }
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 15px 30px;
+      font-size: 15px;
+      font-weight: bold;
+      background: -webkit-linear-gradient(45deg, #d6ff7f, #00b3cc 100%);
+      color: #fff;
+    }
+  }
+  .inner__con__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 15px;
+      font-weight: bold;
+      background: -webkit-linear-gradient(45deg, #d6ff7f, #00b3cc 100%);
+      color: #fff;
+    }
+  }
+}
