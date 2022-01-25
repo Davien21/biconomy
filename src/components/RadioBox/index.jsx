@@ -30,7 +30,7 @@ function RadioBox({ options, name, selectedInput, setSelectedInput }) {
                 value={item}
                 onClick={() => toggleInput(item)}
               />
-              <span className="text-white">{item}</span>
+              <span>{item}</span>
             </label>
           </div>
         );

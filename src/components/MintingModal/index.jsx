@@ -5,8 +5,9 @@ import Emitter from "../../services/emitter";
 import {
   approveTokenForSpending,
   checkIFApproved,
+  findTokenGasPrice,
 } from "../../services/web3Service";
-import styles from "./minting-modal.module.css";
+import styles from "./minting-modal.module.scss";
 
 function MintingModal({ isActive, setIsActive }) {
   const { approveToken } = useAppContext();
@@ -31,12 +32,15 @@ function MintingModal({ isActive, setIsActive }) {
         (async () => {
           const isApproved = await approveToken(selectedToken);
           console.log(isApproved);
+          setApprovalState(true);
+          Emitter.emit("CLOSE_LOADER");
         })();
       } catch (error) {
-        console.log(error);
+        Emitter.emit("CLOSE_LOADER");
+        // console.log(error);
       }
     }
-  }, [approvalState, selectedToken]);
+  }, [approvalState, approveToken, selectedToken]);
 
   const checkForApproval = useCallback(() => {
     if (approvalState === "loading") {
@@ -51,11 +55,19 @@ function MintingModal({ isActive, setIsActive }) {
     }
   }, [approvalState, selectedToken]);
 
+  const findGasPriceForToken = async () => {
+    const fee = await findTokenGasPrice(selectedToken);
+    console.log(fee);
+    setTransactionFee(fee);
+  };
+
   useEffect(() => {
     if (isActive) {
       checkForApproval();
     }
   }, [checkForApproval, isActive]);
+
+  useState(() => {});
   const closeModal = () => {
     setIsActive(false);
   };
@@ -91,15 +103,12 @@ function MintingModal({ isActive, setIsActive }) {
         className={`${styles["modal-body"]} `}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between">
-          <div className="px-5 pt-5 pb-4">
+        <div className="flex justify-end">
+          <div className="px-5 pt-5 pb-4 absolute top-0 right-0">
             <CloseButton />
           </div>
-          <div className="px-5 pt-5 pb-4">
-            <Wizard />
-          </div>
         </div>
-        <p className="mb-3 px-5 pt-4 green-gradient-text text-xl font-extrabold">
+        <p className="mb-3 mt-3 px-5 pt-4 green-gradient-text text-xl font-extrabold text-center">
           Select tokens to pay gas fees
         </p>
         <div
@@ -126,8 +135,13 @@ function MintingModal({ isActive, setIsActive }) {
                     disabled={!selectedToken}
                     onClick={
                       approvalState === false
-                        ? () => approveToSpend(selectedToken)
-                        : null
+                        ? () => {
+                            Emitter.emit("OPEN_LOADER");
+                            setTimeout(() => {
+                              approveToSpend(selectedToken);
+                            }, 3000);
+                          }
+                        : () => setCurrentScreen(2)
                     }
                   >
                     {approveButtonText}
@@ -156,7 +170,12 @@ function MintingModal({ isActive, setIsActive }) {
                   className={`flex gap-x-4 px-5 justify-center mt-7 mb-4 ${styles["token-btns"]}`}
                 >
                   <button className="flex-1">Cancel</button>
-                  <button className="flex-1">Proceed</button>
+                  <button
+                    onClick={() => findGasPriceForToken(selectedToken)}
+                    className="flex-1"
+                  >
+                    Proceed
+                  </button>
                 </div>
               </div>
             )}

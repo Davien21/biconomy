@@ -21,7 +21,8 @@
 }
 
 .container .token-btns :first-child {
-  height: 50px;
+  height: 40px;
+  border-radius: 5px;
   border: 2px solid #b8babf;
   box-sizing: border-box;
   font-style: normal;
@@ -32,7 +33,8 @@
 }
 
 .container .token-btns :last-child {
-  height: 50px;
+  height: 40px;
+  border-radius: 5px;
   background: linear-gradient(90deg, #f26474 0%, #f46a49 48.88%, #fdcb97 100%);
   font-style: normal;
   font-weight: bold;
@@ -49,12 +51,14 @@
 .container .modal-body {
   opacity: 0;
   margin: auto;
-  color: #fff;
-  background-color: #0f1010;
+  color: rgb(24, 23, 23);
+  background-color: hsl(0, 0%, 100%);
   margin-top: 10px;
   position: relative;
   transition: all 0.3s ease-in-out;
   z-index: var(--modal-z-index);
+  border-radius: 10px;
+  padding: 25px;
 }
 
 .container.active .modal-body {
@@ -81,7 +85,16 @@
   overflow-x: hidden;
 }
 
+
+  .screen-1 {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 button.loading {
   background: #b3b3b3 !important;
   color: #0f1010;
-}
+  height: 180px;}
