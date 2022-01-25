@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { RadioBox, Wizard, CloseButton, Button } from "../../components";
-import { useAppContext } from "../../contexts/appContext";
+import { RadioBox, CloseButton, Button } from "../../components";
 import Emitter from "../../services/emitter";
 import {
   approveTokenForSpending,
@@ -8,9 +7,9 @@ import {
   findTokenGasPrice,
 } from "../../services/web3Service";
 import styles from "./minting-modal.module.scss";
+import { toast } from "react-toastify";
 
 function MintingModal({ isActive, setIsActive }) {
-  const { approveToken } = useAppContext();
   const containerRef = useRef();
   const [containerClass, setContainerClass] = useState(
     `${styles["container"]}`
@@ -30,7 +29,7 @@ function MintingModal({ isActive, setIsActive }) {
     if (approvalState === false) {
       try {
         (async () => {
-          const isApproved = await approveToken(selectedToken);
+          const isApproved = await approveTokenForSpending(selectedToken);
           console.log(isApproved);
           setApprovalState(true);
           Emitter.emit("CLOSE_LOADER");
@@ -40,7 +39,7 @@ function MintingModal({ isActive, setIsActive }) {
         // console.log(error);
       }
     }
-  }, [approvalState, approveToken, selectedToken]);
+  }, [approvalState, selectedToken]);
 
   const checkForApproval = useCallback(() => {
     if (approvalState === "loading") {
@@ -48,6 +47,10 @@ function MintingModal({ isActive, setIsActive }) {
         (async () => {
           const isApproved = await checkIFApproved(selectedToken);
           setApprovalState(isApproved);
+          if (isApproved)
+            toast.success(`You have approved spending for ${selectedToken}`);
+          if (isApproved)
+            toast.error(`You have not been approved yet for ${selectedToken}`);
         })();
       } catch (error) {
         console.log(error);
@@ -55,11 +58,11 @@ function MintingModal({ isActive, setIsActive }) {
     }
   }, [approvalState, selectedToken]);
 
-  const findGasPriceForToken = async () => {
+  const findGasPriceForToken = useCallback(async () => {
     const fee = await findTokenGasPrice(selectedToken);
-    console.log(fee);
     setTransactionFee(fee);
-  };
+    toast.success("Gas Fee was fetched successfully");
+  }, [selectedToken]);
 
   useEffect(() => {
     if (isActive) {
@@ -71,6 +74,14 @@ function MintingModal({ isActive, setIsActive }) {
   const closeModal = () => {
     setIsActive(false);
   };
+
+  useEffect(() => {
+    if (currentScreen === 2) {
+      (async () => {
+        await findGasPriceForToken(selectedToken);
+      })();
+    }
+  }, [currentScreen, findGasPriceForToken, selectedToken]);
 
   useEffect(() => {
     document.body.style.overflow = isActive ? "hidden" : "auto";
@@ -171,7 +182,7 @@ function MintingModal({ isActive, setIsActive }) {
                 >
                   <button className="flex-1">Cancel</button>
                   <button
-                    onClick={() => findGasPriceForToken(selectedToken)}
+                    onClick={() => toast.success("This is the end of the demo")}
                     className="flex-1"
                   >
                     Proceed

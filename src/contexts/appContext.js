@@ -10,7 +10,6 @@ import {
   connectToMetaMask,
   getActiveWallet,
   approveTokenForSpending,
-  checkIFApproved,
   listenToAccountChanges,
   hasEthereum,
   unmountEthListeners,
@@ -41,12 +40,6 @@ export function AppProvider({ children }) {
       return true;
     })();
   }, []);
-
-  const approveToken = (token) => {
-    (async () => {
-      await approveTokenForSpending(token);
-    })();
-  };
 
   const resetValues = useCallback(() => {
     return (async () => {
@@ -105,7 +98,6 @@ export function AppProvider({ children }) {
         handleWalletConnect,
         handleWalletDisconnect,
         hasMetaMask,
-        approveToken,
       }}
     >
       {children}

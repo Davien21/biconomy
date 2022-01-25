@@ -92,8 +92,8 @@ oracleAggregatorAddressMap[42] = "0x6c0F8e37e953e6101168717Ab80CFB5A8D2A2F3E";
 
 export async function findTokenGasPrice(tokenAddress) {
   tokenAddress = tokenAddresses[tokenAddress.toLowerCase()];
-  const ethersProvider = ethers.getDefaultProvider("42");
-  const gasPrice = ethers.BigNumber.from(await getGasPrice("42"));
+  const ethersProvider = ethers.getDefaultProvider(42);
+  const gasPrice = ethers.BigNumber.from(await getGasPrice(42));
   const oracleAggregatorAddress = oracleAggregatorAddressMap[42];
   const oracleAggregator = new ethers.Contract(
     oracleAggregatorAddress,
