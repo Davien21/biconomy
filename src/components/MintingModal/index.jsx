@@ -123,7 +123,7 @@ function MintingModal({ isActive, setIsActive }) {
             <CloseButton />
           </div>
         </div>
-        <p className="mb-3 mt-3 px-5 pt-4 green-gradient-text text-xl font-extrabold text-center">
+        <p className="mb-3 mt-3 px-5 pt-4 text-xl font-extrabold text-center">
           Select tokens to pay gas fees
         </p>
         <div
