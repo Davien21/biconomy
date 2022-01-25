@@ -1,10 +1,6 @@
 module.exports = {
-  mode: "jit",
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,html}",
-    "./components/**/*.{js,ts,jsx,tsx,html}",
-  ],
-  darkMode: "media", // or 'media' or 'class'
+  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
+  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
     screens: {
@@ -14,10 +10,6 @@ module.exports = {
       xl: "1280px",
       "2xl": "1536px",
       "3xl": "1600px",
-    },
-    colors: {
-      primaryBg: "#0B0106",
-      white: "#fff",
     },
     container: {
       center: true,

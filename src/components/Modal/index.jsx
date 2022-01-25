@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "..";
-import { CloseBtn } from "../../assets";
+import { CloseIcon } from "../../assets";
 import { PrimaryButton } from "../Button/primaryButton";
 import styles from "./modal.module.scss";
 
@@ -8,7 +8,7 @@ function Modal() {
   return (
     <div className={styles.modal}>
       <div className={styles.inner__modal}>
-        <CloseBtn className={styles.close__Btn} />
+        <CloseIcon className={styles.close__Btn} />
         <h1>Select tokens to pay gas fees</h1>
         <span className={styles.button__holder}>
           <PrimaryButton text="Ether" />
