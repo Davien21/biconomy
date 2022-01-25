@@ -80,7 +80,9 @@ function MintingModal({ isActive, setIsActive }) {
   useEffect(() => {
     if (currentScreen === 2) {
       (async () => {
+        Emitter.emit("OPEN_LOADER");
         await findGasPriceForToken(selectedToken);
+        Emitter.emit("CLOSE_LOADER");
       })();
     }
   }, [currentScreen, findGasPriceForToken, selectedToken]);
@@ -177,7 +179,7 @@ function MintingModal({ isActive, setIsActive }) {
                   />
                 </div>
                 <p className="text-center">
-                  Estimated transaction fee: {transactionFee}
+                  Estimated transaction fee: {transactionFee} {selectedToken}
                 </p>
                 <div
                   className={`flex gap-x-4 px-5 justify-center mt-7 mb-4 ${styles["token-btns"]}`}
