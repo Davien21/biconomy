@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { RadioBox, Wizard, CloseButton, Button } from "../../components";
-import styles from "./minting-modal.module.css";
+import styles from "./minting-modal.module.scss";
 
 function MintingModal({ isActive, setIsActive }) {
   const containerRef = useRef();
@@ -43,15 +43,12 @@ function MintingModal({ isActive, setIsActive }) {
         className={`${styles["modal-body"]} `}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between">
-          <div className="px-5 pt-5 pb-4">
+        <div className="flex justify-end">
+          <div className="px-5 pt-5 pb-4 absolute top-0 right-0">
             <CloseButton />
           </div>
-          <div className="px-5 pt-5 pb-4">
-            <Wizard />
-          </div>
         </div>
-        <p className="mb-3 px-5 pt-4 green-gradient-text text-xl font-extrabold">
+        <p className="mb-3 mt-3 px-5 pt-4 green-gradient-text text-xl font-extrabold text-center">
           Select tokens to pay gas fees
         </p>
         <div
@@ -62,7 +59,7 @@ function MintingModal({ isActive, setIsActive }) {
         </div>
         <div className="p-5">
           <div className={`p-3 ${styles["screens"]}`}>
-            <div className={`${styles["screen-1"]}`}>
+            <div className={`${styles["screen-1"]} `}>
               <div className="my-2 flex gap-x-10 justify-center">
                 <RadioBox name="attending" options={["USDC", "USDT", "DAI"]} />
               </div>

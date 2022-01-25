@@ -1,9 +1,13 @@
 .container {
-  // height: 100vh;
+  height: 100vh;
   // border: 1px solid green;
 }
 
 .container {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  // justify-content: center;
   section > div {
     max-width: 500px;
   }
@@ -11,7 +15,7 @@
     font-style: normal;
     font-weight: bold;
     font-size: 90px;
-  
+
     color: #ffffff;
     span:last-child {
       background: -webkit-linear-gradient(45deg, #d6ff7f, #00b3cc 100%);
