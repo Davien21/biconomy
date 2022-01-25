@@ -5,11 +5,12 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { getUSDTDetails } from "../services/usdtService";
 
 import {
   connectToMetaMask,
   getActiveWallet,
+  approveTokenForSpending,
+  checkIFApproved,
   listenToAccountChanges,
   hasEthereum,
   unmountEthListeners,
@@ -19,21 +20,11 @@ const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [transactions, setTransactions] = useState([]);
-  const [USDTData, setUSDTData] = useState({
-    name: "",
-    totalSupply: 0,
-    balance: 0,
-    symbol: "",
-    initialSupply: 0,
-  });
+
   const [isInitiallyFetched, setIsInitiallyFetched] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [hasMetaMask, setHasMetaMask] = useState(true);
 
-  const onTransactionUpdate = (updates) => {
-    setTransactions(updates);
-  };
   const handleWalletConnect = useCallback(() => {
     return (async () => {
       const connectionStatus = await connectToMetaMask();
@@ -42,9 +33,8 @@ export function AppProvider({ children }) {
       setUser(address);
 
       setIsConnected(true);
-      const usdtData = await getUSDTDetails(onTransactionUpdate);
 
-      if (usdtData) setUSDTData(usdtData);
+      // const data = await approveTokenForSpending("usdt");
 
       localStorage.setItem("wallet-connection", true);
 
@@ -52,11 +42,15 @@ export function AppProvider({ children }) {
     })();
   }, []);
 
+  const approveToken = (token) => {
+    (async () => {
+      await approveTokenForSpending(token);
+    })();
+  };
+
   const resetValues = useCallback(() => {
     return (async () => {
       const address = getActiveWallet();
-      const usdtData = await getUSDTDetails(onTransactionUpdate);
-      setUSDTData(usdtData);
 
       setUser(address);
       setIsConnected(true);
@@ -104,8 +98,6 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
-        USDTData,
-        transactions,
         user,
         setUser,
         isConnected,
@@ -113,6 +105,7 @@ export function AppProvider({ children }) {
         handleWalletConnect,
         handleWalletDisconnect,
         hasMetaMask,
+        approveToken,
       }}
     >
       {children}

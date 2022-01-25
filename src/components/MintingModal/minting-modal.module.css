@@ -80,3 +80,8 @@
   width: 100%;
   overflow-x: hidden;
 }
+
+button.loading {
+  background: #b3b3b3 !important;
+  color: #0f1010;
+}

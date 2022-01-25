@@ -1,15 +1,61 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { RadioBox, Wizard, CloseButton, Button } from "../../components";
+import { useAppContext } from "../../contexts/appContext";
+import Emitter from "../../services/emitter";
+import {
+  approveTokenForSpending,
+  checkIFApproved,
+} from "../../services/web3Service";
 import styles from "./minting-modal.module.css";
 
 function MintingModal({ isActive, setIsActive }) {
+  const { approveToken } = useAppContext();
   const containerRef = useRef();
   const [containerClass, setContainerClass] = useState(
     `${styles["container"]}`
   );
   const [currentScreen, setCurrentScreen] = useState(1);
   const [transactionFee, setTransactionFee] = useState("0.00");
-  const [selectedToken, setSelectedToken] = useState("");
+  const [selectedToken, setSelectedToken] = useState("USDT");
+  const [approvalState, setApprovalState] = useState("loading");
+
+  const approveButtonText = (() => {
+    if (approvalState === true) return "Continue";
+    if (approvalState === false) return "Approve";
+    if (approvalState === "loading") return "Loading";
+  })();
+
+  const approveToSpend = useCallback(() => {
+    if (approvalState === false) {
+      try {
+        (async () => {
+          const isApproved = await approveToken(selectedToken);
+          console.log(isApproved);
+        })();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [approvalState, selectedToken]);
+
+  const checkForApproval = useCallback(() => {
+    if (approvalState === "loading") {
+      try {
+        (async () => {
+          const isApproved = await checkIFApproved(selectedToken);
+          setApprovalState(isApproved);
+        })();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [approvalState, selectedToken]);
+
+  useEffect(() => {
+    if (isActive) {
+      checkForApproval();
+    }
+  }, [checkForApproval, isActive]);
   const closeModal = () => {
     setIsActive(false);
   };
@@ -76,10 +122,15 @@ function MintingModal({ isActive, setIsActive }) {
                 </div>
                 <div className="flex justify-center my-5">
                   <Button
+                    className={styles[approvalState.toString()]}
                     disabled={!selectedToken}
-                    onClick={() => setCurrentScreen(2)}
+                    onClick={
+                      approvalState === false
+                        ? () => approveToSpend(selectedToken)
+                        : null
+                    }
                   >
-                    Approve
+                    {approveButtonText}
                   </Button>
                 </div>
                 <p className="text-center">

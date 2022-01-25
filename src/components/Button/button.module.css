@@ -17,6 +17,10 @@
   color: #fff;
 }
 
+.container.loading {
+  background-color: #f3f3f3 !important;
+}
+
 .container:not(:disabled)::before {
   content: "";
   display: block;
