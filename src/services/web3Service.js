@@ -3,6 +3,7 @@ import { USDTContractAddress } from "../utils";
 import { Biconomy } from "@biconomy/mexa";
 import { config } from "./config";
 import { formatEther, parseEther } from "ethers/lib/utils";
+import { helperAttributes } from "../helpers/erc20ForwarderHelpers";
 
 const tokenAddresses = {
   usdt: "0x8e1084f3599ba90991C3b2f9e25D920738C1496D",
@@ -69,13 +70,44 @@ export async function getTokenContract(signer, address) {
   }
 }
 
-export async function getTokenGasPrice() {
-  const biconomy = new Biconomy(window.ethereum, {
-    apiKey: "T-jgoywWD.f34cc484-df0e-4e10-b8af-fac3fa09c2da",
-    debug: true,
-  });
-  let ethersProvider = new ethers.providers.Web3Provider(biconomy);
-  console.log({ ethersProvider });
+const getGasPrice = async (networkId) => {
+  const apiInfo = `${helperAttributes.baseURL}/api/v1/gas-price?networkId=${networkId}`;
+  const response = await fetch(apiInfo);
+  const responseJson = await response.json();
+  console.log("Response JSON " + JSON.stringify(responseJson));
+  return ethers.utils
+    .parseUnits(responseJson.gasPrice.value.toString(), "gwei")
+    .toString();
+};
+
+let daiTokenAddressMap = {},
+  biconomyForwarderAddressMap = {},
+  oracleAggregatorAddressMap = {},
+  erc20ForwarderAddressMap = {};
+
+daiTokenAddressMap[42] = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa";
+biconomyForwarderAddressMap[42] = "0xE8Df44bcaedD41586cE73eB85e409bcaa834497B";
+erc20ForwarderAddressMap[42] = "0xbc4de0Fa9734af8DB0fA70A24908Ab48F7c8D75d";
+oracleAggregatorAddressMap[42] = "0x6c0F8e37e953e6101168717Ab80CFB5A8D2A2F3E";
+
+export async function findTokenGasPrice(tokenAddress) {
+  tokenAddress = tokenAddresses[tokenAddress.toLowerCase()];
+  const ethersProvider = ethers.getDefaultProvider("42");
+  const gasPrice = ethers.BigNumber.from(await getGasPrice("42"));
+  const oracleAggregatorAddress = oracleAggregatorAddressMap[42];
+  const oracleAggregator = new ethers.Contract(
+    oracleAggregatorAddress,
+    helperAttributes.oracleAggregatorAbi,
+    ethersProvider
+  );
+  const tokenPrice = await oracleAggregator.getTokenPrice(tokenAddress);
+  const tokenOracleDecimals = await oracleAggregator.getTokenOracleDecimals(
+    tokenAddress
+  );
+  return gasPrice
+    .mul(ethers.BigNumber.from(10).pow(tokenOracleDecimals))
+    .div(tokenPrice)
+    .toString();
 }
 
 export async function checkIFApproved(tokenAddress) {
@@ -95,7 +127,8 @@ export async function checkIFApproved(tokenAddress) {
 
   const testContract = "0xbc4de0Fa9734af8DB0fA70A24908Ab48F7c8D75d";
   const approvedAmount = await tokenContract.allowed(testContract, address);
-  return parseInt(approvedAmount) > 0;
+  console.log({ approvedAmount: approvedAmount.toString() });
+  return parseInt(approvedAmount.toString()) > 0;
 }
 
 export async function approveTokenForSpending(tokenAddress) {
@@ -110,16 +143,11 @@ export async function approveTokenForSpending(tokenAddress) {
   const signer = provider.getSigner();
 
   const tokenContract = await getTokenContract(signer, tokenAddress);
-  await tokenContract.approve(
+  const tx = await tokenContract.approve(
     "0xbc4de0Fa9734af8DB0fA70A24908Ab48F7c8D75d",
-    parseEther("10").toString()
+    parseEther("1").toString()
   );
 
-  const testContract = "0xbc4de0Fa9734af8DB0fA70A24908Ab48F7c8D75d";
-  const tx = await tokenContract.approve(
-    testContract,
-    parseEther("5").toString()
-  );
   const a = await tx.wait();
   console.log(a);
 }
