@@ -27,7 +27,7 @@
   font-style: normal;
   font-weight: bold;
   font-size: 20px;
-  
+
   color: #b8babf;
 }
 
@@ -37,7 +37,7 @@
   font-style: normal;
   font-weight: bold;
   font-size: 20px;
-  
+
   color: #ffffff;
 }
 
@@ -55,8 +55,6 @@
   position: relative;
   transition: all 0.3s ease-in-out;
   z-index: var(--modal-z-index);
-  
-
 }
 
 .container.active .modal-body {
@@ -66,7 +64,7 @@
 
 @media screen and (min-width: 640px) {
   .modal-body {
-    min-width: 500px;
+    width: 500px;
   }
 }
 
@@ -78,7 +76,7 @@
 
 .screens {
   border: 2px solid rgba(184, 186, 191, 0.2);
-  height: 180px;
-  
-
+  height: 220px;
+  width: 100%;
+  overflow-x: hidden;
 }

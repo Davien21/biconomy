@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { CheckboxIcon } from "../../assets";
 import styles from "./radio-box.module.css";
 
-function RadioBox({ formik, options, name }) {
-  const [selectedItem, setSelectedItem] = useState(null);
+function RadioBox({ options, name, selectedInput, setSelectedInput }) {
   const toggleInput = (item) => {
-    setSelectedItem(item);
+    setSelectedInput(item);
   };
   return (
     <>
@@ -16,7 +15,7 @@ function RadioBox({ formik, options, name }) {
             className={`${styles["container"]} mb-3 flex items-center`}
           >
             <button
-              className={`mr-2 ${selectedItem === item && styles["true"]}`}
+              className={`mr-2 ${selectedInput === item && styles["true"]}`}
               onClick={(e) => {
                 toggleInput(item);
                 e.preventDefault();

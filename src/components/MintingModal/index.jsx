@@ -7,7 +7,9 @@ function MintingModal({ isActive, setIsActive }) {
   const [containerClass, setContainerClass] = useState(
     `${styles["container"]}`
   );
-
+  const [currentScreen, setCurrentScreen] = useState(1);
+  const [transactionFee, setTransactionFee] = useState("0.00");
+  const [selectedToken, setSelectedToken] = useState("");
   const closeModal = () => {
     setIsActive(false);
   };
@@ -33,7 +35,7 @@ function MintingModal({ isActive, setIsActive }) {
   }, [isActive, setIsActive]);
 
   return (
-    <form
+    <div
       // onSubmit={() => alert("submitted")}
       ref={containerRef}
       className={containerClass}
@@ -62,19 +64,55 @@ function MintingModal({ isActive, setIsActive }) {
         </div>
         <div className="p-5">
           <div className={`p-3 ${styles["screens"]}`}>
-            <div className={`${styles["screen-1"]}`}>
-              <div className="my-2 flex gap-x-10 justify-center">
-                <RadioBox name="attending" options={["USDC", "USDT", "DAI"]} />
+            {currentScreen === 1 && (
+              <div className={`${styles["screen-1"]}`}>
+                <div className="my-2 flex gap-x-10 justify-center">
+                  <RadioBox
+                    name="attending"
+                    selectedInput={selectedToken}
+                    setSelectedInput={setSelectedToken}
+                    options={["USDC", "USDT", "DAI"]}
+                  />
+                </div>
+                <div className="flex justify-center my-5">
+                  <Button
+                    disabled={!selectedToken}
+                    onClick={() => setCurrentScreen(2)}
+                  >
+                    Approve
+                  </Button>
+                </div>
+                <p className="text-center">
+                  Give approval to Biconomy ERC20 Forwarder so it can deduct
+                  transaction fee in selected token.
+                </p>
               </div>
-              <div className="flex justify-center">
-                <Button>Approve</Button>
+            )}
+            {currentScreen === 2 && (
+              <div className={`${styles["screen-2"]}`}>
+                <div className="my-2 flex gap-x-10 justify-center">
+                  <RadioBox
+                    name="attending"
+                    selectedInput={selectedToken}
+                    setSelectedInput={setSelectedToken}
+                    options={["USDC", "USDT", "DAI"]}
+                  />
+                </div>
+                <p className="text-center">
+                  Estimated transaction fee: {transactionFee}
+                </p>
+                <div
+                  className={`flex gap-x-4 px-5 justify-center mt-7 mb-4 ${styles["token-btns"]}`}
+                >
+                  <button className="flex-1">Cancel</button>
+                  <button className="flex-1">Proceed</button>
+                </div>
               </div>
-            </div>
-            <div className={`${styles["screen-2"]}`}></div>
+            )}
           </div>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 
