@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { RadioBox, CloseButton, Button } from "../../components";
+import { RadioBox, Wizard, CloseButton, Button } from "../../components";
+import { useAppContext } from "../../contexts/appContext";
 import Emitter from "../../services/emitter";
 import {
   approveTokenForSpending,
@@ -10,6 +11,7 @@ import styles from "./minting-modal.module.scss";
 import { toast } from "react-toastify";
 
 function MintingModal({ isActive, setIsActive }) {
+  const { approveToken } = useAppContext();
   const containerRef = useRef();
   const [containerClass, setContainerClass] = useState(
     `${styles["container"]}`
@@ -29,7 +31,7 @@ function MintingModal({ isActive, setIsActive }) {
     if (approvalState === false) {
       try {
         (async () => {
-          const isApproved = await approveTokenForSpending(selectedToken);
+          const isApproved = await approveToken(selectedToken);
           console.log(isApproved);
           setApprovalState(true);
           Emitter.emit("CLOSE_LOADER");
@@ -39,7 +41,7 @@ function MintingModal({ isActive, setIsActive }) {
         // console.log(error);
       }
     }
-  }, [approvalState, selectedToken]);
+  }, [approvalState, approveToken, selectedToken]);
 
   const checkForApproval = useCallback(() => {
     if (approvalState === "loading") {

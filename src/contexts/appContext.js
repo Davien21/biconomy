@@ -41,6 +41,12 @@ export function AppProvider({ children }) {
     })();
   }, []);
 
+  const approveToken = (token) => {
+    (async () => {
+      await approveTokenForSpending(token);
+    })();
+  };
+
   const resetValues = useCallback(() => {
     return (async () => {
       const address = getActiveWallet();
@@ -98,6 +104,7 @@ export function AppProvider({ children }) {
         handleWalletConnect,
         handleWalletDisconnect,
         hasMetaMask,
+        approveToken,
       }}
     >
       {children}
